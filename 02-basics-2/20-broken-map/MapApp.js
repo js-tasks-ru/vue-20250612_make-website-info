@@ -1,31 +1,31 @@
-import { defineComponent, ref, watch } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'MapApp',
 
   setup() {
     // Реактивные переменные для хранения координат метки
-    let x = ref(0)
-    let y = ref(0)
+    const x = ref(0)
+    const y = ref(0)
 
     /**
      * Обработчик клика по карте для установки координат метки
      * @param {MouseEvent} event
      */
     function handleClick(event) {
-      x = event.offsetX
-      y = event.offsetY
+      x.value = event.offsetX
+      y.value = event.offsetY
     }
 
-    // Следим за X и Y для установки нового положения
-    watch([x, y], () => {
-      // Находим метку и изменяем её положение
-      const map = document.querySelector('.pin')
-      map.style.left = `${x}px`
-      map.style.top = `${y}px`
-    })
+    // Для удобства вынесем вычисление стиля позиционирования в отдельное вычисляемое свойство
+    // Можно обойтись и без вычисляемого свойств, сразу прописывая стили в шаблоне
+    const pinPositionStyle = computed(() => ({
+      left: `${x.value}px`,
+      top: `${y.value}px`,
+    }))
 
     return {
+      pinPositionStyle,
       handleClick,
     }
   },
@@ -33,7 +33,8 @@ export default defineComponent({
   template: `
     <div class="map" @click="handleClick">
       <img class="map-image" src="./map.png" alt="Map" draggable="false" />
-      <span class="pin">📍</span>
+      <!-- Стили должны определяться шаблоном через привязку -->
+      <span class="pin" :style="pinPositionStyle">📍</span>
     </div>
   `,
 })
