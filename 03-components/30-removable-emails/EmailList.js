@@ -20,8 +20,10 @@ export default defineComponent({
       <EmailListItem
         v-for="({ email, isMarked }, index) in emails"
         :key="email"
+        :id="index"
         :email="email"
         :marked="isMarked"
+        @delete-email="$emit('removeEmail', index)"
       />
     </ul>
   `,
