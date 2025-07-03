@@ -1,12 +1,12 @@
-import { computed, defineComponent, ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'MapApp',
 
   setup() {
     // Реактивные переменные для хранения координат метки
-    const x = ref(0)
-    const y = ref(0)
+    let x = ref(0)
+    let y = ref(0)
 
     /**
      * Обработчик клика по карте для установки координат метки
@@ -17,24 +17,37 @@ export default defineComponent({
       y.value = event.offsetY
     }
 
-    // Для удобства вынесем вычисление стиля позиционирования в отдельное вычисляемое свойство
-    // Можно обойтись и без вычисляемого свойств, сразу прописывая стили в шаблоне
-    const pinPositionStyle = computed(() => ({
-      left: `${x.value}px`,
-      top: `${y.value}px`,
-    }))
+    // Следим за X и Y для установки нового положения
+    // ❗ В Vue за редкими исключениями нельзя манипулировать DOM напрямую.
+    // watch([x, y], () => {
+    //   console.log('x = ', x.value);
+    //   console.log('y = ', y.value);
+    //
+    //   // Находим метку и изменяем её положение
+    //   const map = document.querySelector('.pin')
+    //
+    //   console.log('map - ', map);
+    //
+    //   map.style.left = `${x.value}px`
+    //   map.style.top = `${y.value}px`
+    // })
 
     return {
-      pinPositionStyle,
       handleClick,
+      x,
+      y
     }
   },
 
   template: `
     <div class="map" @click="handleClick">
       <img class="map-image" src="./map.png" alt="Map" draggable="false" />
-      <!-- Стили должны определяться шаблоном через привязку -->
-      <span class="pin" :style="pinPositionStyle">📍</span>
+      <span class="pin"
+      :style="{
+        left: \`\${x}px\`,
+        top: \`\${y}px\`,
+      }"
+      >📍</span>
     </div>
   `,
 })
