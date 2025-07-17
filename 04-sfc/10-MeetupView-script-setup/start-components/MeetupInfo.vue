@@ -1,8 +1,15 @@
-<script setup>
-  import { computed } from 'vue'
-  import { UiIcon } from '@shgk/vue-course-ui'
+<script>
+import { computed, defineComponent } from 'vue'
+import { UiIcon } from '@shgk/vue-course-ui'
 
-  const props = defineProps({
+export default defineComponent({
+  name: 'MeetupInfo',
+
+  components: {
+    UiIcon,
+  },
+
+  props: {
     organizer: {
       type: String,
     },
@@ -14,17 +21,23 @@
     date: {
       type: Number,
     },
-  })
+  },
 
-  const isoDate = computed(() => new Date(props.date).toISOString().slice(0, 10))
-  const localDate = computed(() =>
-    new Date(props.date).toLocaleString(navigator.language, {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    }),
-  )
-
+  setup(props) {
+    const isoDate = computed(() => new Date(props.date).toISOString().slice(0, 10))
+    const localDate = computed(() =>
+      new Date(props.date).toLocaleString(navigator.language, {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }),
+    )
+    return {
+      isoDate,
+      localDate,
+    }
+  },
+})
 </script>
 
 <template>

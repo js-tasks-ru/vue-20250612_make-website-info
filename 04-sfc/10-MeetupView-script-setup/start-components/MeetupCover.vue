@@ -1,7 +1,10 @@
-<script setup>
-  import { computed } from 'vue'
+<script>
+import { computed, defineComponent } from 'vue'
 
-  const props = defineProps({
+export default defineComponent({
+  name: 'MeetupCover',
+
+  props: {
     title: {
       type: String,
     },
@@ -9,10 +12,15 @@
     image: {
       type: String,
     },
-  })
+  },
 
-  const bgStyle = computed(() => (props.image ? { '--bg-url': `url('${props.image}')` } : undefined))
-  
+  setup(props) {
+    const bgStyle = computed(() => (props.image ? { '--bg-url': `url('${props.image}')` } : undefined))
+    return {
+      bgStyle,
+    }
+  },
+})
 </script>
 
 <template>
